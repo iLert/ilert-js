@@ -12,7 +12,7 @@ describe("INT Test", () => {
 
     before(() => {
         client = new ILert(secret.config);
-        client.on("response", console.log);
+        // client.on("response", console.log);
         apiKey = secret.apiKey;
     });
 
@@ -123,7 +123,7 @@ describe("INT Test", () => {
 
         it("should be able to update monitor", async() => {
 
-            const monitor = await client.uptimeMonitor().get(monitorId).data;
+            const monitor = (await client.uptimeMonitor().get(monitorId)).data;
             
             assert(monitor);
             assert.equal(monitor.intervalSec, 300);
@@ -134,7 +134,7 @@ describe("INT Test", () => {
             assert(response);
             assert.equal(response.status, 200);
 
-            const updatedMonitor = await client.uptimeMonitor().get(monitorId).data;
+            const updatedMonitor = (await client.uptimeMonitor().get(monitorId)).data;
             
             assert(updatedMonitor);
             assert.equal(monitor.intervalSec, 310);
@@ -149,7 +149,7 @@ describe("INT Test", () => {
 
             let monitor = null;
             try {
-                monitor = await client.uptimeMonitor().get(monitorId).data;
+                monitor = (await client.uptimeMonitor().get(monitorId)).data;
             } catch(error) {
                 // empty
             }
