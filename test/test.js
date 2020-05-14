@@ -128,16 +128,21 @@ describe("INT Test", () => {
             assert(monitor);
             assert.equal(monitor.intervalSec, 300);
 
-            monitor.intervalSec = 310;
+            monitor.intervalSec = 600;
 
             const response = await client.uptimeMonitor().update(monitorId, monitor);
             assert(response);
             assert.equal(response.status, 200);
+            assert(response.data.escalationPolicy.id);
 
             const updatedMonitor = (await client.uptimeMonitor().get(monitorId)).data;
-            
             assert(updatedMonitor);
-            assert.equal(monitor.intervalSec, 310);
+            assert.equal(updatedMonitor.intervalSec, 600);
+        });
+
+        it("should be able to get monitor count", async() => {
+            const count = (await client.uptimeMonitor().count()).data.count;
+            assert(count > 0);
         });
 
         it("should be able to delete monitor", async() => {
