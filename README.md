@@ -12,13 +12,15 @@
 const { ILert } = require("ilert");
 const ilert = new ILert();
 
-const { data } = await ilert.createEvent(
+const { data } = await ilert.event().create(
     "il1api0460d849fcdc753d4c65848f478cee89f67158b37a473f",
     ILert.EVENT_TYPES.RESOLVE,
-    "My test incident sumary",
+    "My test incident summary",
     { incidentKey: "123456" } // optional
 );
 ```
+
+Typescript definitions included.
 
 ## Getting help
 
