@@ -83,7 +83,7 @@ describe("INT Test", () => {
 
     describe("UptimeMonitor", () => {
 
-        let monitorId = null;
+        let monitor = null;
 
         it("should be able to create monitor", async() => {
 
@@ -106,7 +106,7 @@ describe("INT Test", () => {
     
             assert(response);
             assert.equal(response.status, 201);
-            monitorId = response.data.id;
+            monitor = client.uptimeMonitor(response.data.id);
         });
 
         it("should be able to fetch uptime monitors", async() => {
@@ -116,26 +116,26 @@ describe("INT Test", () => {
             assert(response);
             assert.equal(response.status, 200);
             assert(response.data.length > 0);
-            assert(response.data.filter((monitor) => {
-                return monitor.id === monitorId;
+            assert(response.data.filter((_monitor) => {
+                return _monitor.id === monitor.id;
             }).length === 1);
         });
 
         it("should be able to update monitor", async() => {
 
-            const monitor = (await client.uptimeMonitor().get(monitorId)).data;
+            const monitorData = (await monitor.get()).data;
             
-            assert(monitor);
-            assert.equal(monitor.intervalSec, 300);
+            assert(monitorData);
+            assert.equal(monitorData.intervalSec, 300);
 
-            monitor.intervalSec = 600;
+            monitorData.intervalSec = 600;
 
-            const response = await client.uptimeMonitor().update(monitorId, monitor);
+            const response = await monitor.update(monitorData);
             assert(response);
             assert.equal(response.status, 200);
             assert(response.data.escalationPolicy.id);
 
-            const updatedMonitor = (await client.uptimeMonitor().get(monitorId)).data;
+            const updatedMonitor = (await monitor.get()).data;
             assert(updatedMonitor);
             assert.equal(updatedMonitor.intervalSec, 600);
         });
@@ -147,19 +147,55 @@ describe("INT Test", () => {
 
         it("should be able to delete monitor", async() => {
 
-            const response = await client.uptimeMonitor().delete(monitorId);
+            const response = await monitor.delete();
 
             assert(response);
             assert.equal(response.status, 204);
 
-            let monitor = null;
+            let deletedMonitor = null;
             try {
-                monitor = (await client.uptimeMonitor().get(monitorId)).data;
+                deletedMonitor = (await monitor.get()).data;
             } catch(error) {
                 // empty
             }
 
-            assert.equal(monitor, null);
+            assert.equal(deletedMonitor, null);
+        });
+    });
+
+    describe("Incident", () => {
+
+        it("should be able to create pending incident through event", async () => {
+
+            const response = await client.event().create(
+                apiKey,
+                ILert.EVENT_TYPES.ALERT,
+                "ilert-js test",
+                {
+                    incidentKey: "resolve-test"
+                }
+            );
+    
+            assert(response);
+            assert.equal(response.status, 200);
+        });
+
+        it("should be able to fetch, accept and resolve incident", async () => {
+
+            const incidentsResponse = await client.incident().get(ILert.INCIDENT_STATES.PENDING, 0, 5);
+    
+            assert(incidentsResponse);
+            assert.equal(incidentsResponse.status, 200);
+            assert(incidentsResponse.data.length > 0);
+
+            const incident = client.incident(incidentsResponse.data[0].id);
+            const acceptResponse = await incident.accept();
+            assert(acceptResponse);
+            assert.equal(acceptResponse.status, 200);
+
+            const resolveResponse = await incident.resolve();
+            assert(resolveResponse);
+            assert.equal(resolveResponse.status, 200);
         });
     });
 });
