@@ -3,11 +3,12 @@
 declare module "ilert" {
 
     export interface ILertConfig {
-        baseURL:? String;
-        tenant?: String;
-        username?: String;
-        password?: String;
-        apiKey?: String;
+        baseURL:? string;
+        tenant?: string;
+        username?: string;
+        password?: string;
+        apiKey?: string;
+        timeoutMs?: number;
     }
 
     export interface ILertResponse {
@@ -39,20 +40,26 @@ declare module "ilert" {
         ping
     }
 
+    export enum ILertIncidentStates {
+        PENDING,
+        ACCEPTED,
+        RESOLVED
+    }
+
     export interface ILertImage {
-        src:? String;
-        href:? String;
-        alt:? String;
+        src:? string;
+        href:? string;
+        alt:? string;
     }
 
     export interface ILertLink {
-        href:? String;
-        text:? String;
+        href:? string;
+        text:? string;
     }
 
     export interface ILertEventCreateOptions {
-        details:? String;
-        incidentKey?: String;
+        details:? string;
+        incidentKey?: string;
         priority:? ILertPriorityType;
         images:? ILertImage[];
         links:? ILertLink[];
@@ -61,7 +68,8 @@ declare module "ilert" {
 
     export class Event {
         constructor(ilert: ILert);
-        create(apiKey: String, eventType: ILertEventType, summary: String, optional:? ILertEventCreateOptions): Promise<ILertResponse>;
+        create(apiKey: string, eventType: ILertEventType, summary: string,
+            optional:? ILertEventCreateOptions): Promise<ILertResponse>;
     }
 
     export class User {
@@ -70,25 +78,48 @@ declare module "ilert" {
     }
 
     export interface ILertCheckParams {
-        host:? String;
+        host:? string;
         port:? number;
-        url:? String;
+        url:? string;
     }
 
     export class UptimeMonitor {
         constructor(ilert: ILert);
-        get(id?: String): Promise<ILertResponse>;
-        create(name: String, region: ILertRegionType, checkType: ILertCheckType, escalationPolicyId: number, checkParams: ILertCheckParams, optional: any): Promise<ILertResponse>;
-        update(id: String, uptimeMonitor: any): Promise<ILertResponse>;
-        delete(id: String): Promise<ILertResponse>;
+        get(): Promise<ILertResponse>;
+        create(name: string, region: ILertRegionType, checkType: ILertCheckType,
+            escalationPolicyId: number, checkParams: ILertCheckParams, optional: any): Promise<ILertResponse>;
         count(): Promise<ILertResponse>;
+    }
+
+    export class UptimeMonitorItem {
+        constructor(ilert: ILert, id: string);
+        get(): Promise<ILertResponse>;
+        update(uptimeMonitor: any): Promise<ILertResponse>;
+        delete(): Promise<ILertResponse>;
+    }
+
+    export class Incident {
+        constructor(ilert: ILert);
+        get(state:? ILertIncidentStates, offset:? number, limit:? number): Promise<ILertResponse>;
+        count(): Promise<ILertResponse>;
+    }
+
+    export class IncidentItem {
+        constructor(ilert: ILert, id: number);
+        get(): Promise<ILertResponse>;
+        notifications(): Promise<ILertResponse>;
+        logEntries(): Promise<ILertResponse>;
+        assign(userId: number | string): Promise<ILertResponse>;
+        accept(): Promise<ILertResponse>;
+        resolve(): Promise<ILertResponse>;
     }
 
     export class ILert {
         constructor(config: ILertConfig);
-        call(method: String, body:? String, url: String): Promise<ILertResponse>;
+        call(method: string, body:? string, url: string, query:? any): Promise<ILertResponse>;
         event(): Event;
         user(): User;
-        uptimeMonitor(): UptimeMonitor;
+        uptimeMonitor(id?: string): UptimeMonitor | UptimeMonitorItem;
+        incident(id?: number): Incident | IncidentItem;
     }
 }

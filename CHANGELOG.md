@@ -1,5 +1,9 @@
 # ilert-js CHANGELOG
 
+## 2020-05-22, Version 3.0.1
+
+* added missing typescript definitions
+
 ## 2020-05-22, Version 3.0.0
 
 * **BREAKING** adapted to a better single item api structure
