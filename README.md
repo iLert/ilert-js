@@ -18,10 +18,10 @@ const { data } = await ilert.event().create(
     ILert.EVENT_TYPES.ALERT,
     "My test incident summary",
     { incidentKey: "123456" } // optional
+);
 
 // resolving a pending incident
 await ilert.incident(45678).resolve();
-);
 ```
 
 Typescript definitions included.
