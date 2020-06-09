@@ -14,7 +14,7 @@ const ilert = new ILert();
 
 // creating a new event
 const { data } = await ilert.event().create(
-    "il1api0460d849fcdc753d4c65848f478cee89f67158b37a473f",
+    "il1api0460d849fcdc753d4f",
     ILert.EVENT_TYPES.ALERT,
     "My test incident summary",
     { incidentKey: "123456" } // optional
@@ -22,6 +22,9 @@ const { data } = await ilert.event().create(
 
 // resolving a pending incident
 await ilert.incident(45678).resolve();
+
+// ping a heartbeat
+await ilert.heartbeat("il1hbt0460d849fcdc753").ping();
 ```
 
 Typescript definitions included.

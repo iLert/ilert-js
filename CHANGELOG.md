@@ -1,5 +1,9 @@
 # ilert-js CHANGELOG
 
+## 2020-06-09, Version 3.1.0
+
+* added heartbeat endpoint
+
 ## 2020-05-22, Version 3.0.1
 
 * added missing typescript definitions

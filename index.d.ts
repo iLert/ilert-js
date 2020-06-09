@@ -114,6 +114,15 @@ declare module "ilert" {
         resolve(): Promise<ILertResponse>;
     }
 
+    export class Heartbeat {
+        constructor(ilert: ILert);
+    }
+
+    export class HeartbeatItem {
+        constructor(ilert: ILert, id: number);
+        ping(): Promise<ILertResponse>;
+    }
+
     export class ILert {
         constructor(config: ILertConfig);
         call(method: string, body:? string, url: string, query:? any): Promise<ILertResponse>;
@@ -121,5 +130,6 @@ declare module "ilert" {
         user(): User;
         uptimeMonitor(id?: string): UptimeMonitor | UptimeMonitorItem;
         incident(id?: number): Incident | IncidentItem;
+        heartbeat(id?: string): Heartbeat | HeartbeatItem;
     }
 }

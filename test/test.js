@@ -198,4 +198,13 @@ describe("INT Test", () => {
             assert.equal(resolveResponse.status, 200);
         });
     });
+
+    describe("Heartbeat", () => {
+
+        it("should be able to ping heartbeat", async() => {
+            const response = await client.heartbeat(1234567).ping();
+            assert(response);
+            assert.equal(response.status, 202);
+        });
+    });
 });
