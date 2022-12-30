@@ -30,7 +30,7 @@
   "homepage": "https://github.com/iLert/ilert-js#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "mocha": "^7.1.2",
+    "mocha": "^10.2.0",
     "querystring": "^0.2.0"
   }
 }
