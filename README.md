@@ -10,7 +10,9 @@
 
 ```js
 const { ILert } = require("ilert");
-const ilert = new ILert();
+const ilert = new ILert({
+    apiKey: "123123" // optional
+});
 
 // creating a new event
 const { data } = await ilert.event().create(
@@ -20,8 +22,11 @@ const { data } = await ilert.event().create(
     { incidentKey: "123456" } // optional
 );
 
-// resolving a pending incident
-await ilert.incident(45678).resolve();
+// resolving a pending alert
+await ilert.alert(45678).resolve();
+
+// fetch an incident
+await ilert.incident(12345).get();
 
 // ping a heartbeat
 await ilert.heartbeat("il1hbt0460d849fcdc753").ping();

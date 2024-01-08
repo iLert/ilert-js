@@ -1,6 +1,6 @@
 {
   "name": "ilert",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "iLert api bindings",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -29,8 +29,10 @@
   },
   "homepage": "https://github.com/iLert/ilert-js#readme",
   "dependencies": {
-    "axios": "^0.21.1",
-    "mocha": "^7.1.2",
-    "querystring": "^0.2.0"
+    "axios": "1.6.5",
+    "querystring": "0.2.1"
+  },
+  "devDependencies": {
+    "mocha": "10.2.0"
   }
 }

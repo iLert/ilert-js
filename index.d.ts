@@ -39,8 +39,15 @@ declare module "ilert" {
         udp,
         ping
     }
-
+    
     export enum ILertIncidentStates {
+        INVESTIGATING,
+        IDENTIFIED,
+        MONITORING,
+        RESOLVED
+    }
+
+    export enum ILertAlertStates {
         PENDING,
         ACCEPTED,
         RESOLVED
@@ -83,28 +90,25 @@ declare module "ilert" {
         url:? string;
     }
 
-    export class UptimeMonitor {
+    export class Incident {
         constructor(ilert: ILert);
         get(): Promise<ILertResponse>;
-        create(name: string, region: ILertRegionType, checkType: ILertCheckType,
-            escalationPolicyId: number, checkParams: ILertCheckParams, optional: any): Promise<ILertResponse>;
-        count(): Promise<ILertResponse>;
     }
 
-    export class UptimeMonitorItem {
+    export class IncidentItem {
         constructor(ilert: ILert, id: string);
         get(): Promise<ILertResponse>;
         update(uptimeMonitor: any): Promise<ILertResponse>;
         delete(): Promise<ILertResponse>;
     }
 
-    export class Incident {
+    export class Alert {
         constructor(ilert: ILert);
-        get(state:? ILertIncidentStates, offset:? number, limit:? number): Promise<ILertResponse>;
+        get(state:? ILertAlertStates, offset:? number, limit:? number): Promise<ILertResponse>;
         count(): Promise<ILertResponse>;
     }
 
-    export class IncidentItem {
+    export class AlertItem {
         constructor(ilert: ILert, id: number);
         get(): Promise<ILertResponse>;
         notifications(): Promise<ILertResponse>;
@@ -128,8 +132,8 @@ declare module "ilert" {
         call(method: string, body:? string, url: string, query:? any): Promise<ILertResponse>;
         event(): Event;
         user(): User;
-        uptimeMonitor(id?: string): UptimeMonitor | UptimeMonitorItem;
-        incident(id?: number): Incident | IncidentItem;
+        alert(id?: string): Alert | AlertItem;
+        incident(id?: number): Incident | IncidentItem;
         heartbeat(id?: string): Heartbeat | HeartbeatItem;
     }
 }
